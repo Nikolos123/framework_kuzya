@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block main_block %}
+
+    <div id="">
+{#        <main>#}
+            <div class="container-fluid">
+                <h1 class="mt-4">Преподователи</h1>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Список преподователей
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ФИО</th>
+                                    <th>Наименования предмета</th>
+                                    <th>Дата начало</th>
+                                    <th>Дата окончания</th>
+                                     <th>Удалить</th>
+                                    <th>Изменить</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr>
+                                    <td>ФИО</td>
+                                    <td>Предметы</td>
+                                    <td>01.12.2021</td>
+                                    <td>31.12.2021</td>
+                                    <td><i class="fas fa-check-circle"></i></td>
+                                    {#<i class="fas fa-times-circle"></i>#}
+                                    <td>
+                                        <form action="#" method="post">
+                                            <input class="btn btn-danger btn-block" type="submit" value="Удалить">
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="">
+                                            <input class="btn btn-success btn-block" type="submit" value="Изменить">
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="">
+                            <button class="btn btn-success">Добавить нового учителя</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+{#        </main>#}
+    </div>
+
+{% endblock %}

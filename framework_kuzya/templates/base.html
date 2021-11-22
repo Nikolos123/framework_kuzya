@@ -12,7 +12,7 @@
           crossorigin="anonymous"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"
             crossorigin="anonymous"></script>
-    <link rel="icon" href="{{ static }}images/favicon.ico" />
+    <link rel="icon" href="{{ static }}images/favicon.ico"/>
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -44,6 +44,26 @@
                         </div>
                         Курсы учеников
                     </a>
+                    <a class="nav-link" href="/category-list/">
+                        <div class="sb-nav-link-icon">
+                            <i class="fa fa-address-card"></i>
+                        </div>
+                        Категории
+                    </a>
+
+                    <a class="nav-link" href="#">
+                        <div class="sb-nav-link-icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        Учителя
+                    </a>
+                    <a class="nav-link" href="#">
+                        <div class="sb-nav-link-icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        Ученики
+                    </a>
+
                     <a class="nav-link" href="/feedback/">
                         <div class="sb-nav-link-icon">
                             <i class="fa fa-envelope"></i>
@@ -56,11 +76,11 @@
         </nav>
     </div>
     <div id="layoutSidenav_content">
-{#        <main>#}
-            {% block main_block %}
+        {#        <main>#}
+        {% block main_block %}
 
-            {% endblock %}
-{#        </main>#}
+        {% endblock %}
+        {#        </main>#}
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid">
                 <div class="d-flex align-items-center justify-content-between small">

@@ -25,6 +25,8 @@ class Feedback:
         return '200 OK', render('feedback.html')
 
 
+#LIST
+
 # Класс-контроллер - Страница "Список категорий"
 @AppRoute(routes=routes, url='/category-list/')
 class CategoryList:
@@ -34,6 +36,57 @@ class CategoryList:
         return '200 OK', render('category.html',
                                 objects_list=site.categories)
 
+# Класс-контроллер - Страница "Список учителей"
+@AppRoute(routes=routes, url='/teacher-list/')
+class TeachersList:
+
+    def __call__(self, request):
+
+        return '200 OK', render('teachers.html',
+                                objects_list=site.teachers)
+
+# Класс-контроллер - Страница "Список курсов"
+@AppRoute(routes=routes, url='/course-list/')
+class CoursesList:
+
+    def __call__(self, request):
+
+        return '200 OK', render('teachers.html',
+                                objects_list=site.courses)
+
+# Класс-контроллер - Страница "Список студентов"
+@AppRoute(routes=routes, url='/student-list/')
+class StudentsList:
+
+    def __call__(self, request):
+
+        return '200 OK', render('teachers.html',
+                                objects_list=site.students)
+
+# Класс-контроллер - Страница "Список типов обучения"
+@AppRoute(routes=routes, url='/type-course/')
+class TypeCoursesList:
+
+    def __call__(self, request):
+
+        return '200 OK', render('type_courses.html',
+                                objects_list=site.type_courses)
+
+
+
+#CREATE
+
+
+# Класс-контроллер - Страница "Список типов обучения"
+@AppRoute(routes=routes, url='/type-course-list/')
+class TypeCoursesCreate:
+
+    def __call__(self, request):
+
+        if request['method'] == 'POST':
+            pass
+        return '200 OK', render('type_courses.html',
+                                objects_list=site.type_courses)
 
 # Класс-контроллер - Страница "Создать категорию"
 @AppRoute(routes=routes, url='/create-category/')
@@ -59,3 +112,9 @@ class CreateCategory:
         #     categories = site.categories
         return '200 OK', render('category.html',
                                     categories=site.categories)
+
+#UPDATE
+
+#DELETE
+
+#COPY

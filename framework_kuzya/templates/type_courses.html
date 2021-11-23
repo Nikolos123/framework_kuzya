@@ -5,7 +5,7 @@
     <div id="">
         {#        <main>#}
         <div class="container-fluid">
-            <h1 class="mt-4">Ученики</h1>
+            <h1 class="mt-4">Типы курсов</h1>
 
 
             <!-- Modal -->
@@ -13,32 +13,18 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Добавить ученика</h5>
+                            <h5 class="modal-title" id="exampleModalLongTitle">Добавить тип</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form method="post">
+                            <form action="" method="post">
                                 <div class="form-group">
-                                    <label for="name">ФИО:</label>
+                                    <label for="name">Наименование:</label>
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Name">
                                 </div>
-                                <div class="form-group">
-
-                                    <select name="course"  class="form-control" multiple>
-                                        {% for course in list_course %}
-{#                                        <option selected value="s1">Чебурашка</option>#}
-                                        <option value="{{ course.id }}">{{ course.name }}</option>
-{#                                        <option value="s3">Шапокляк</option>#}
-{#                                        <option value="s4">Крыса Лариса</option>#}
-                                        {% endfor %}
-                                   </select>
-
-
-{#                                    <label for="email1">Курсы</label>#}
-{#                                    <input type="email" name="email" class="form-control" id="email1" placeholder="Email">#}
-                                </div>
+{#                                <a href="/add-student/">Добавить студента на курс</a>#}
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Создать</button>
                                 </div>
@@ -50,7 +36,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table mr-1"></i>
-                    Список учеников
+                    Список типов кусов
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -58,19 +44,17 @@
                             <thead>
                             <tr>
                                 <th>Ид</th>
-                                <th>ФИО</th>
-                                <th>Курсы</th>
+                                <th>Наименование</th>
                                 <th>Скопировать</th>
                                 <th>Изменить</th>
                                 <th>Удалить</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for teacher in object_list %}
+                            {% for course in object_list %}
                                 <tr>
-                                    <td>{{ teacher.id }}</td>
-                                    <td>{{ teacher.name }}</td>
-                                    <td>{{ category.courses }}</td>
+                                    <td>{{ course.id }}</td>
+                                    <td>{{ course.name }}</td>
                                     <td>
                                         <form action="#" method="post">
                                             <input class="btn btn-danger btn-block" type="submit" value="Скопировать">
@@ -95,7 +79,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#Category_create">
-                        Добавить Ученика
+                        Добавить тип курса
                     </button>
                 </div>
             </div>

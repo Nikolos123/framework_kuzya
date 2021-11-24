@@ -43,11 +43,18 @@ class UserFactory:
 # Класс-Курс
 class Course:
 
-    def __init__(self, name, category):
+    def __init__(self, name,course_type):
         self.name = name
-        self.category = category
-        self.category.courses.append(self)
+        self.type = course_type
+        # self.category.courses.append(self)
 
+# Класс-Тип курсов курсов
+class CourseType:
+    auto_id = 0
+    def __init__(self, name):
+        self.name = name
+        self.id = CourseType.auto_id
+        CourseType.auto_id += 1
 
 # Класс-Интерактивный курс
 class InteractiveCourse(Course):
@@ -101,6 +108,10 @@ class Engine:
         self.type_courses = []
 
     @staticmethod
+    def create_type_course(name):
+        return CourseType(name)
+
+    @staticmethod
     def create_user(type_):
         return UserFactory.create(type_)
 
@@ -116,8 +127,12 @@ class Engine:
         raise Exception(f'Нет категории с id = {id}')
 
     @staticmethod
-    def create_course(type_, name, category):
-        return CourseFactory.create(type_, name, category)
+    def create_course(type_, name,category):
+        return CourseFactory.create(type_, name,category)
+
+    @staticmethod
+    def create_course_with_type(type_, name,category):
+        return CourseFactory.create(type_, name,category)
 
     def get_course(self, name):
         for item in self.courses:

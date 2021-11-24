@@ -51,7 +51,7 @@ class CoursesList:
 
     def __call__(self, request):
 
-        return '200 OK', render('teachers.html',
+        return '200 OK', render('courses.html',
                                 objects_list=site.courses)
 
 # Класс-контроллер - Страница "Список студентов"
@@ -64,7 +64,7 @@ class StudentsList:
                                 objects_list=site.students)
 
 # Класс-контроллер - Страница "Список типов обучения"
-@AppRoute(routes=routes, url='/type-course/')
+@AppRoute(routes=routes, url='/type-course-list/')
 class TypeCoursesList:
 
     def __call__(self, request):
@@ -78,15 +78,18 @@ class TypeCoursesList:
 
 
 # Класс-контроллер - Страница "Список типов обучения"
-@AppRoute(routes=routes, url='/type-course-list/')
+@AppRoute(routes=routes, url='/type-course-create/')
 class TypeCoursesCreate:
 
     def __call__(self, request):
 
         if request['method'] == 'POST':
-            pass
-        return '200 OK', render('type_courses.html',
-                                objects_list=site.type_courses)
+            data = request['data']
+            name = site.decode_value(data['name'])
+            new_type = site.create_type_course(name)
+            site.type_courses.append(new_type)
+            return '200 OK', render('type_courses.html',
+                                    objects_list=site.type_courses)
 
 # Класс-контроллер - Страница "Создать категорию"
 @AppRoute(routes=routes, url='/create-category/')

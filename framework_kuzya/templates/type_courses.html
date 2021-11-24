@@ -19,7 +19,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="" method="post">
+                            <form action="/type-course-create/" method="post">
                                 <div class="form-group">
                                     <label for="name">Наименование:</label>
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Name">
@@ -51,7 +51,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for course in object_list %}
+                            {% for course in objects_list %}
                                 <tr>
                                     <td>{{ course.id }}</td>
                                     <td>{{ course.name }}</td>

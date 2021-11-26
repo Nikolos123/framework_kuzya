@@ -2,8 +2,10 @@ import quopri
 from os import path
 
 from components.content_types import CONTENT_TYPES_MAP
+from components.models import Logger
 from framework_kuzya.framework_requests import PostRequests, GetRequests
 
+logger = Logger('main')
 
 class PageNotFound404:
     def __call__(self,request):
@@ -34,12 +36,13 @@ class Framework:
         if method == 'POST':
             data = PostRequests().get_request_params(environ)
             request['data'] = data
-            print(f'Нам пришёл post-запрос: {Framework.decode_value(data)}')
+            logger.log(f'Нам пришёл post-запрос: {Framework.decode_value(data)}')
+            # print(f'Нам пришёл post-запрос: {Framework.decode_value(data)}')
         if method == 'GET':
             request_params = GetRequests().get_request_params(environ)
             request['request_params'] = request_params
-            print(f'Нам пришли GET-параметры: {request_params}')
-
+            # print(f'Нам пришли GET-параметры: {request_params}')
+            logger.log(f'Нам пришли GET-параметры: {request_params}')
         # Находим нужный контроллер
         if path in self.routes_lst:
             view = self.routes_lst[path]
@@ -50,9 +53,7 @@ class Framework:
         elif path.startswith(self.settings.STATIC_URL):
             # /static/images/logo.jpg/ -> images/logo.jpg
             file_path = path[len(self.settings.STATIC_URL):len(path) - 1]
-            print(file_path)
             content_type = self.get_content_type(file_path)
-            print(content_type)
             code, body = self.get_static(self.settings.STATIC_FILES_DIR,
                                          file_path)
 
@@ -69,7 +70,6 @@ class Framework:
     def get_content_type(file_path, content_types_map=CONTENT_TYPES_MAP):
         file_name = path.basename(file_path).lower()  # styles.css
         extension = path.splitext(file_name)[1]  # .css
-        print(extension)
         return content_types_map.get(extension, "text/html")
 
     @staticmethod

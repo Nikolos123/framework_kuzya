@@ -2,7 +2,7 @@
 from framework_kuzya.templator import render
 from components.models import Engine,Logger
 from components.decorators import AppRoute
-logger = Logger('kuzya')
+logger = Logger('views')
 
 site = Engine()
 routes = {}

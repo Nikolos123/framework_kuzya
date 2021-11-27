@@ -9,6 +9,5 @@ from components import settings
 application = Framework(settings, routes)
 
 with make_server('', PORT, application) as httpd:
-    print("Запуск сервера")
-    print(f'{URL_ADDRESS}:{PORT}')
+    print(f'Сервер запущен  {URL_ADDRESS}:{PORT}')
     httpd.serve_forever()

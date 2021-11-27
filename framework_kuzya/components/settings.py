@@ -8,3 +8,13 @@ STATIC_URL = '/static/'
 
 PORT = 8080
 URL_ADDRESS = 'http://127.0.0.1'
+
+
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'jinja2',
+#         'DIRS': ['templates']
+#         ,
+#         'APP_DIRS': True,
+#     },
+# ]

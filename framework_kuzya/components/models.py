@@ -109,10 +109,24 @@ class Engine:
     def type_course(param):
         return CourseType(param)
 
-    def type_course_delete(self):
+    def type_course_delete(self,id):
         for item in self.type_courses:
             if item.id == id:
-                item.delete()
+                self.type_courses.pop(id)
+                return self.type_courses
+        raise Exception(f'Нет course с id = {id}')
+
+    def type_course_detail(self,id):
+        for item in self.type_courses:
+            if item.id == id:
+                return item
+        raise Exception(f'Нет course с id = {id}')
+
+    def type_course_update(self,id,name):
+        for item in self.type_courses:
+            if item.id == id:
+                item.name = name
+                return self.type_courses
         raise Exception(f'Нет course с id = {id}')
 
     @staticmethod

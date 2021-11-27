@@ -1,4 +1,6 @@
 from wsgiref.simple_server import make_server
+
+from components.settings import URL_ADDRESS, PORT
 from framework_kuzya.main import Framework
 from views import routes
 from components import settings
@@ -6,6 +8,7 @@ from components import settings
 # Создаем объект WSGI-приложения
 application = Framework(settings, routes)
 
-with make_server('', 8085, application) as httpd:
-    print("Запуск на порту 8080...")
+with make_server('', PORT, application) as httpd:
+    print("Запуск сервера")
+    print(f'{URL_ADDRESS}:{PORT}')
     httpd.serve_forever()

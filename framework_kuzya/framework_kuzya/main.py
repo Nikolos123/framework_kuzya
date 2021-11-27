@@ -36,7 +36,15 @@ class Framework:
         if method == 'POST':
             data = PostRequests().get_request_params(environ)
             request['data'] = data
-            logger.log(f'Нам пришёл post-запрос: {Framework.decode_value(data)}')
+            if data['method']:
+                method_new = data['method']
+                if method_new != '':
+                    request['method']=data['method']
+                    self.add_logger(method_new,data)
+                else:
+                    self.add_logger(method, data)
+            else:
+                self.add_logger(method, data)
             # print(f'Нам пришёл post-запрос: {Framework.decode_value(data)}')
         if method == 'GET':
             request_params = GetRequests().get_request_params(environ)
@@ -65,6 +73,10 @@ class Framework:
         start_response(code, [('Content-Type', content_type)])
 
         return [body]
+
+    @staticmethod
+    def add_logger(method,data):
+        logger.log(f'Нам пришёл {method}-запрос: {Framework.decode_value(data)}')
 
     @staticmethod
     def get_content_type(file_path, content_types_map=CONTENT_TYPES_MAP):

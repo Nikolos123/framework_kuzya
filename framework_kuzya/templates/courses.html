@@ -1,15 +1,11 @@
 {% extends "base.html" %}
 
 {% block main_block %}
-
     <div id="">
-        {#        <main>#}
         <div class="container-fluid">
             <h1 class="mt-4">Курсы</h1>
-
-
-            <!-- Modal -->
-            <div class="modal fade" id="Category_create" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal fade" id="Category_create" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -25,10 +21,14 @@
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="name">Тип курса:</label>
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                    <select name="select" class="form-control" size="5" multiple>
+                                        {% for type_course in objects_list_type_course %}
+                                            <option selected
+                                                    value="{{ type_course.id }}">{{ type_course.name }}</option>
+                                            {#                                        <option selected value="{{ type_course.id }}">{{ type_course.name }}</option>#}
+                                        {% endfor %}
+                                    </select>
                                 </div>
-
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Создать</button>
                                 </div>

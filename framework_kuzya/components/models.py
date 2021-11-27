@@ -43,16 +43,17 @@ class UserFactory:
 # Класс-Курс
 class Course:
 
-    def __init__(self, name,course_type):
+    def __init__(self, name, course_type):
         self.name = name
         self.type = course_type
         # self.category.courses.append(self)
 
+
 # Класс-Тип курсов курсов
 class CourseType:
     auto_id = 0
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, param):
+        self.name = param
         self.id = CourseType.auto_id
         CourseType.auto_id += 1
 
@@ -60,11 +61,9 @@ class CourseType:
 class InteractiveCourse(Course):
     pass
 
-
 # Класс-Курс в записи
 class RecordCourse(Course):
     pass
-
 
 # Класс-Фабрика курсов
 class CourseFactory:
@@ -80,7 +79,6 @@ class CourseFactory:
 
 # Класс-Категория
 class Category:
-
     auto_id = 0
 
     def __init__(self, name, category):
@@ -108,8 +106,14 @@ class Engine:
         self.type_courses = []
 
     @staticmethod
-    def create_type_course(name):
-        return CourseType(name)
+    def type_course(param):
+        return CourseType(param)
+
+    def type_course_delete(self):
+        for item in self.type_courses:
+            if item.id == id:
+                item.delete()
+        raise Exception(f'Нет course с id = {id}')
 
     @staticmethod
     def create_user(type_):
@@ -127,12 +131,12 @@ class Engine:
         raise Exception(f'Нет категории с id = {id}')
 
     @staticmethod
-    def create_course(type_, name,category):
-        return CourseFactory.create(type_, name,category)
+    def create_course(type_, name, category):
+        return CourseFactory.create(type_, name, category)
 
     @staticmethod
-    def create_course_with_type(type_, name,category):
-        return CourseFactory.create(type_, name,category)
+    def create_course_with_type(type_, name, category):
+        return CourseFactory.create(type_, name, category)
 
     def get_course(self, name):
         for item in self.courses:
@@ -145,6 +149,7 @@ class Engine:
         val_b = bytes(val.replace('%', '=').replace("+", " "), 'UTF-8')
         val_decode_str = quopri.decodestring(val_b)
         return val_decode_str.decode('UTF-8')
+
 
 # порождающий паттерн Синглтон
 class SingletonByName(type):

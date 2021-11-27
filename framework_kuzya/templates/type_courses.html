@@ -1,13 +1,9 @@
 {% extends "base.html" %}
 
 {% block main_block %}
-
     <div id="">
-        {#        <main>#}
         <div class="container-fluid">
             <h1 class="mt-4">Типы курсов</h1>
-
-
             <!-- Modal -->
             <div class="modal fade" id="Category_create" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -19,9 +15,10 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="/type-course-create/" method="post">
+                            <form action="/type-course-list/" method="post">
                                 <div class="form-group">
                                     <label for="name">Наименование:</label>
+                                    <input type="hidden" name="method" value="create">
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Name">
                                 </div>
 {#                                <a href="/add-student/">Добавить студента на курс</a>#}
@@ -62,7 +59,8 @@
                                     </td>
 
                                     <td>
-                                        <form action="">
+                                        <form action="/type-course-list/">
+                                            <input type="hidden" name="method" value="delete">
                                             <input class="btn btn-success btn-block" type="submit" value="Изменить">
                                         </form>
                                     </td>

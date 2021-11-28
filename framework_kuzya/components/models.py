@@ -45,7 +45,7 @@ class Course:
 
     def __init__(self, name, course_type):
         self.name = name
-        self.type = course_type
+        self.type = [course_type]
         # self.category.courses.append(self)
 
 
@@ -105,6 +105,7 @@ class Engine:
         self.categories = []
         self.type_courses = []
 
+    #Type course
     @staticmethod
     def type_course(param):
         return CourseType(param)
@@ -129,6 +130,11 @@ class Engine:
                 return self.type_courses
         raise Exception(f'Нет course с id = {id}')
 
+    #Course
+    def create_course(self,name, type_):
+        return Course(name,type_)
+
+
     @staticmethod
     def create_user(type_):
         return UserFactory.create(type_)
@@ -144,9 +150,9 @@ class Engine:
                 return item
         raise Exception(f'Нет категории с id = {id}')
 
-    @staticmethod
-    def create_course(type_, name, category):
-        return CourseFactory.create(type_, name, category)
+    # @staticmethod
+    # def create_course(type_, name, category):
+    #     return CourseFactory.create(type_, name, category)
 
     @staticmethod
     def create_course_with_type(type_, name, category):

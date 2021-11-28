@@ -7,7 +7,7 @@ from flask import render_template, jsonify, Flask
 # from coffin import
 from jinja2 import Template, Environment, FileSystemLoader
 
-from components.test_data import add_test_data
+from components.test_data import add_test_data_type_course,add_test_data_course
 from framework_kuzya.templator import render
 from components.models import Engine,Logger
 from components.decorators import AppRoute
@@ -16,8 +16,9 @@ logger = Logger('views')
 site = Engine()
 routes = {}
 
-#Type cource
-add_test_data(site)
+#Test_data
+add_test_data_type_course(site)
+add_test_data_course(site)
 
 # Класс-контроллер - Страница "главная страница"
 @AppRoute(routes=routes, url='/')

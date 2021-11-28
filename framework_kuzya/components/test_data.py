@@ -2,7 +2,7 @@ import json
 
 
 def add_test_data_type_course(site):
-    type_data = ['Онлайн','Офлайн','Онлайн-Офлайн',]
+    type_data = ['Онлайн','Офлайн','test']
     for i in type_data:
         name = site.decode_value(i)
         new_type = site.type_course(name)
@@ -10,11 +10,12 @@ def add_test_data_type_course(site):
 
 
 def add_test_data_course(site):
-    online = "Онлайн"
-    off_online = "Офлайн"
+    online = 0
+    off_online = 1
+    test = 2
 
     dict_course = {
-        'Python': [online, off_online],
+        'Python': [online, off_online,test],
         'Java': [online, ],
         'JavaScript': [off_online],
         'C': [online, ]
@@ -24,7 +25,10 @@ def add_test_data_course(site):
 
     for i in list_course:
         type_course = dict_course.get(i)
-        new_course = site.create_course(i,type_course)
+        list_type = []
+        for item in type_course:
+            list_type.append(site.find_type_course_by_id(int(item)))
+        new_course = site.create_course(i,list_type)
         site.courses.append(new_course)
 
 

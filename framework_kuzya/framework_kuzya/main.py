@@ -7,13 +7,13 @@ from framework_kuzya.framework_requests import PostRequests, GetRequests
 
 logger = Logger('main')
 
+
 class PageNotFound404:
-    def __call__(self,request):
+    def __call__(self, request):
         return '404 WHAT', '404 PAGE Not Found'
 
 
 class Framework:
-
     """Класс Framework - основа WSGI-фреймворка"""
 
     def __init__(self, settings, routes_obj):
@@ -36,11 +36,11 @@ class Framework:
         if method == 'POST':
             data = PostRequests().get_request_params(environ)
             request['data'] = data
-            if data['method']:
+            if data.get('method'):
                 method_new = data['method']
                 if method_new != '':
-                    request['method']=data['method']
-                    self.add_logger(method_new,data)
+                    request['method'] = data['method']
+                    self.add_logger(method_new, data)
                 else:
                     self.add_logger(method, data)
             else:
@@ -75,7 +75,7 @@ class Framework:
         return [body]
 
     @staticmethod
-    def add_logger(method,data):
+    def add_logger(method, data):
         logger.log(f'Нам пришёл {method}-запрос: {Framework.decode_value(data)}')
 
     @staticmethod
@@ -96,7 +96,11 @@ class Framework:
     def decode_value(data):
         new_data = {}
         for k, v in data.items():
-            val = bytes(v.replace('%', '=').replace("+", " "), 'UTF-8')
+            #Обрабатываем списки пока
+            if type(v) == list:
+                val = ','.join(v)
+            else:
+                val = bytes(v.replace('%', '=').replace("+", " "), 'UTF-8')
             val_decode_str = quopri.decodestring(val).decode('UTF-8')
             new_data[k] = val_decode_str
         return new_data

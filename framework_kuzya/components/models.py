@@ -42,11 +42,13 @@ class UserFactory:
 
 # Класс-Курс
 class Course:
-
+    auto_id = 0
     def __init__(self, name, course_type):
         self.name = name
-        self.type = [course_type]
-        # self.category.courses.append(self)
+        self.type = course_type
+        self.id = Course.auto_id
+        Course.auto_id += 1
+
 
 
 # Класс-Тип курсов курсов
@@ -115,24 +117,37 @@ class Engine:
             if item.id == id:
                 self.type_courses.pop(id)
                 return self.type_courses
-        raise Exception(f'Нет course с id = {id}')
+        raise Exception(f'Нет типа курса с id = {id}')
 
     def type_course_detail(self,id):
         for item in self.type_courses:
             if item.id == id:
                 return item
-        raise Exception(f'Нет course с id = {id}')
+        raise Exception(f'Нет типа курса с id = {id}')
 
     def type_course_update(self,id,name):
         for item in self.type_courses:
             if item.id == id:
                 item.name = name
                 return self.type_courses
-        raise Exception(f'Нет course с id = {id}')
+        raise Exception(f'Нет типа курса с id = {id}')
+
+    def find_type_course_by_id(self, id):
+        for item in self.type_courses:
+            if item.id == id:
+                return item
+        raise Exception(f'Нет типа курса с id = {id}')
 
     #Course
     def create_course(self,name, type_):
         return Course(name,type_)
+
+    def delete_course(self,id):
+        for item in self.courses:
+            if item.id == id:
+                self.courses.pop(id)
+                return self.courses
+        raise Exception(f'Нет типа курса с id = {id}')
 
 
     @staticmethod

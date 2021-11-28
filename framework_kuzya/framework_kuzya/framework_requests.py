@@ -33,8 +33,19 @@ class PostRequests:
             params = data.split('&')
             for item in params:
                 # Делим ключ и значение через =
+                #Добавляем обработку одинаковых ключенй так как можем передавать из формы несколько значений сразу
+
                 k, v = item.split('=')
-                result[k] = v
+                if result.get(k):
+                    value = result[k]
+                    if type(value)==str:
+                        result[k] = [v,value]
+                    elif type(value)==list:
+                        value = result[k]
+                        value.append(v)
+                        result[k] = value
+                else:
+                    result[k] = v
         return result
 
     @staticmethod

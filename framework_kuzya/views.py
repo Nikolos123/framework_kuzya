@@ -3,14 +3,15 @@ import json
 
 
 from django.template.loader import render_to_string
-from flask import render_template, jsonify, Flask
+# from flask import render_template, jsonify, Flask
 # from coffin import
 from jinja2 import Template, Environment, FileSystemLoader
 
 from components.test_data import add_test_data_type_course,add_test_data_course
 from framework_kuzya.templator import render
 from components.models import Engine,Logger
-from components.decorators import AppRoute
+from components.decorators import AppRoute, Debug
+
 logger = Logger('views')
 
 site = Engine()
@@ -23,6 +24,7 @@ add_test_data_course(site)
 # Класс-контроллер - Страница "главная страница"
 @AppRoute(routes=routes, url='/')
 class Index:
+    @Debug(name="Index")
     def __call__(self,request):
         logger.log('Вход на главную страницу')
         return '200 OK', render('schedule.html')
@@ -30,6 +32,7 @@ class Index:
 # Класс-контроллер - Страница "о компании"
 @AppRoute(routes=routes, url='/about/')
 class About:
+    @Debug(name="About")
     def __call__(self,request):
         logger.log('Вход на страницу о компании')
         return '200 OK', render('about.html')
@@ -37,6 +40,7 @@ class About:
 # Класс-контроллер - Страница "обратная связь"
 @AppRoute(routes=routes, url='/feedback/')
 class Feedback:
+    @Debug(name="Feedback")
     def __call__(self,request):
         logger.log('Вход на страницу обратная связь')
         return '200 OK', render('feedback.html')
@@ -47,7 +51,7 @@ class Feedback:
 # Класс-контроллер - Страница "Список категорий"
 @AppRoute(routes=routes, url='/category-list/')
 class CategoryList:
-
+    @Debug(name="CategoryList")
     def __call__(self, request):
         logger.log('Получаем список категорий "В РАЗРАБОТКЕ"')
         return '200 OK', render('category.html',
@@ -56,7 +60,7 @@ class CategoryList:
 # Класс-контроллер - Страница "Список учителей"
 @AppRoute(routes=routes, url='/teacher-list/')
 class TeachersList:
-
+    @Debug(name="TeachersList")
     def __call__(self, request):
         logger.log('Получаем список учителей')
         return '200 OK', render('teachers.html',
@@ -66,9 +70,9 @@ class TeachersList:
 # Класс-контроллер - Страница "Список студентов"
 @AppRoute(routes=routes, url='/student-list/')
 class StudentsList:
-    logger.log('Получаем список студентов')
+    @Debug(name="StudentsList")
     def __call__(self, request):
-
+        logger.log('Получаем список студентов')
         return '200 OK', render('teachers.html',
                                 objects_list=site.students)
 
@@ -76,7 +80,7 @@ class StudentsList:
 # Класс-контроллер - "Создание типов обучения"
 @AppRoute(routes=routes, url='/type-course-list/')
 class TypeCourses:
-
+    @Debug(name="CoursesList-create-update-delete-detail")
     def __call__(self, request):
         method = request['method'].upper()
         if method == 'CREATE':
@@ -119,7 +123,8 @@ class TypeCourses:
 
 @AppRoute(routes=routes, url='/course-list/')
 class Courses:
-
+    @Debug(name="Courses-create-update-delete-detail")
+    @Debug(name="TypeCoursesList")
     def __call__(self, request):
         method = request['method'].upper()
         if method == 'CREATE':

@@ -1,9 +1,20 @@
 import quopri
 
-
 # Класс-Абстрактный пользователь
+from components.notification import ConsoleWriter, FileWriter, Subject
+
+
 class User:
-    pass
+    auto_id = 0
+
+    def __init__(self, first_name, last_name,age,course):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
+        self.id = User.auto_id
+        self.course = course
+        User.auto_id += 1
+        # super().__init__()
 
 
 # Класс-Преподаватель
@@ -11,9 +22,19 @@ class Teacher(User):
     pass
 
 
+
 # Класс-Студент
-class Student(User):
-    pass
+class Student(User,Subject):
+
+    def __init__(self, first_name, last_name,age,course,email,phone):
+        super().__init__(first_name, last_name, age,course)
+        self.email = email
+        self.phone = phone
+
+    def add_student(self, student):
+        # self.students.append(student)
+        student.courses.append(self)
+        self.notify()
 
 
 # Класс-Фабрика пользователей
@@ -27,45 +48,37 @@ class UserFactory:
     def create(cls, type_):
         return cls.types[type_]()
 
-    # @classmethod
-    # def get(cls, type_):
-    #     return cls.types[type_]()
-    #
-    # @classmethod
-    # def delete(cls, type_):
-    #     return cls.types[type_]()
-    #
-    # @classmethod
-    # def update(cls, type_):
-    #     return cls.types[type_]()
-
 
 # Класс-Курс
 class Course:
     auto_id = 0
+
     def __init__(self, name, course_type):
         self.name = name
         self.type = course_type
         self.id = Course.auto_id
         Course.auto_id += 1
-
-
+        super().__init__()
 
 # Класс-Тип курсов курсов
 class CourseType:
     auto_id = 0
+
     def __init__(self, param):
         self.name = param
         self.id = CourseType.auto_id
         CourseType.auto_id += 1
 
+
 # Класс-Интерактивный курс
 class InteractiveCourse(Course):
     pass
 
+
 # Класс-Курс в записи
 class RecordCourse(Course):
     pass
+
 
 # Класс-Фабрика курсов
 class CourseFactory:
@@ -107,25 +120,25 @@ class Engine:
         self.categories = []
         self.type_courses = []
 
-    #Type course
+    # Type course
     @staticmethod
     def type_course(param):
         return CourseType(param)
 
-    def type_course_delete(self,id):
+    def type_course_delete(self, id):
         for item in self.type_courses:
             if item.id == id:
                 self.type_courses.pop(id)
                 return self.type_courses
         raise Exception(f'Нет типа курса с id = {id}')
 
-    def type_course_detail(self,id):
+    def type_course_detail(self, id):
         for item in self.type_courses:
             if item.id == id:
                 return item
         raise Exception(f'Нет типа курса с id = {id}')
 
-    def type_course_update(self,id,name):
+    def type_course_update(self, id, name):
         for item in self.type_courses:
             if item.id == id:
                 item.name = name
@@ -138,17 +151,16 @@ class Engine:
                 return item
         raise Exception(f'Нет типа курса с id = {id}')
 
-    #Course
-    def create_course(self,name, type_):
-        return Course(name,type_)
+    # Course
+    def create_course(self, name, type_):
+        return Course(name, type_)
 
-    def delete_course(self,id):
+    def delete_course(self, id):
         for item in self.courses:
             if item.id == id:
                 self.courses.pop(id)
                 return self.courses
         raise Exception(f'Нет типа курса с id = {id}')
-
 
     @staticmethod
     def create_user(type_):
@@ -208,9 +220,14 @@ class SingletonByName(type):
 
 class Logger(metaclass=SingletonByName):
 
-    def __init__(self, name):
+    def __init__(self, name, writer=ConsoleWriter(), writer_file=FileWriter("logs.txt") ):
         self.name = name
+        self.writer = writer
+        self.writer_file = writer_file
 
-    @staticmethod
-    def log(text):
-        print('log--->', text)
+    def log(self, text):
+        # text = f'log---> {text}'
+        self.writer.write(text)
+        self.writer_file.write(text)
+
+

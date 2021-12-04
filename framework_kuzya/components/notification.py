@@ -4,6 +4,9 @@ import jsonpickle
 
 # поведенческий паттерн - наблюдатель
 # Курс
+
+
+
 class Observer:
 
     def update(self, subject):
@@ -11,26 +14,35 @@ class Observer:
 
 
 class Subject:
+    #
+    # def __init__(self):
+    #     self.observers = []
 
-    def __init__(self):
-        self.observers = []
-
-    def notify(self):
+    def notify_student(self,site):
+        text = 'Вы присоеденились к курсу'
         for item in self.observers:
-            item.update(self)
+            item.update(self, text,site,'student')
+
+    def notify_teacher(self, observer):
+        text = 'К вам присоединился студент'
+        for item in observer:
+            item.update(self, text)
 
 
 class SmsNotifier(Observer):
 
     def update(self, subject):
-        print('SMS->', 'к нам присоединился', subject.students[-1].name)
+        print('SMS->', 'к нам присоединился',)
 
 
 class EmailNotifier(Observer):
 
-    def update(self, subject):
-        print(('EMAIL->', 'к нам присоединился', subject.students[-1].name))
-
+    def update(self, subject, text,site,type_data):
+        if type_data =='student':
+            for course in subject.course:
+                print(f'EMAIL->{text}', site.find_course_by_id(int(course)).name)
+        else:
+            pass
 
 class BaseSerializer:
 
@@ -109,6 +121,8 @@ class ConsoleWriter:
 
     def write(self, text):
         print(text)
+
+
 #
 #
 class FileWriter:
@@ -119,4 +133,3 @@ class FileWriter:
     def write(self, text):
         with open(self.file_name, 'a', encoding='utf-8') as f:
             f.write(f'{text}\n')
-

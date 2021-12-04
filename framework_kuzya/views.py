@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from jinja2 import Template, Environment, FileSystemLoader
 
 from components.notification import EmailNotifier, SmsNotifier, BaseSerializer
-from components.test_data import add_test_data_type_course,add_test_data_course
+from components.test_data import add_test_data_type_course,add_test_data_course,add_test_data_student
 from framework_kuzya.main import PageNotFound404
 from framework_kuzya.templator import render
 from components.models import Engine,Logger
@@ -23,6 +23,7 @@ routes = {}
 #Test_data
 add_test_data_type_course(site)
 add_test_data_course(site)
+add_test_data_student(site)
 
 # Класс-контроллер - Страница "главная страница"
 @AppRoute(routes=routes, url='/')
@@ -169,28 +170,24 @@ class Students:
         if method == 'CREATE':
             logger.log('Добавить ученика')
             data = request['data']
-            type_course = request['data']['type_course']
-            list_type_course = []
-            for i in type_course:
-                list_type_course.append(site.find_type_course_by_id(int(i)))
-            for k,v in data:
+            for k,v in data.items():
                 data[k] =site.decode_value(v)
 
-            new_type = site.create_course(data,list_type_course)
+            student = site.create_user('student',data)
             # Добавляем наблюдателей на курс
-            new_type.observers.append(email_notifier)
+            student.observers.append(email_notifier)
+            site.students.append(student)
+            student.add_student(site)
 
-            site.courses.append(new_type)
             return '200 OK', render('students.html',
-                                    objects_list=site.students,objects_list_type_course=site.type_courses)
-
+                                    objects_list=site.students,list_course=site.courses)
 
         elif method == 'DELETE':
             logger.log('Удаление обучения')
             id = int(request['data']['id'])
-            result = site.delete_course(id)
-            return '200 OK', render('courses.html',
-                                    objects_list=result)
+            result = site.delete_student(id)
+            return '200 OK', render('students.html',
+                                    objects_list=site.students,list_course=site.courses)
 
         # elif method == 'UPDATE':
         #     logger.log('Обновление обучения')
@@ -210,7 +207,7 @@ class Students:
         elif method == 'GET':
             logger.log('Получаем список студентов')
             return '200 OK', render('students.html',
-                                    objects_list=site.students)
+                                    objects_list=site.students,list_course=site.courses)
 
 
 # Класс-контроллер - Страница "Список учителей"

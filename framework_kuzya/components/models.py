@@ -7,14 +7,15 @@ from components.notification import ConsoleWriter, FileWriter, Subject
 class User:
     auto_id = 0
 
-    def __init__(self, first_name, last_name,age,course):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.age = age
+    def __init__(self,dict_data):
+        self.first_name = dict_data['first_name']
+        self.last_name = dict_data['last_name']
+        self.age = dict_data['age']
         self.id = User.auto_id
-        self.course = course
+        self.observers = []
+        self.course = dict_data['course']
+        self.email = dict_data['email']
         User.auto_id += 1
-        # super().__init__()
 
 
 # Класс-Преподаватель
@@ -22,19 +23,17 @@ class Teacher(User):
     pass
 
 
-
 # Класс-Студент
-class Student(User,Subject):
+class Student(User, Subject):
 
-    def __init__(self, first_name, last_name,age,course,email,phone):
-        super().__init__(first_name, last_name, age,course)
-        self.email = email
-        self.phone = phone
+    def __init__(self, dict_data):
+        super().__init__(dict_data)
+        self.phone = dict_data['phone']
 
-    def add_student(self, student):
-        # self.students.append(student)
-        student.courses.append(self)
-        self.notify()
+        # super().__init__()
+
+    def add_student(self,site):
+        self.notify_student(site)
 
 
 # Класс-Фабрика пользователей
@@ -45,9 +44,8 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, type_):
-        return cls.types[type_]()
-
+    def create(cls, type_, dict_data):
+        return cls.types[type_](dict_data)
 
 # Класс-Курс
 class Course:
@@ -59,6 +57,7 @@ class Course:
         self.id = Course.auto_id
         Course.auto_id += 1
         super().__init__()
+
 
 # Класс-Тип курсов курсов
 class CourseType:
@@ -162,9 +161,23 @@ class Engine:
                 return self.courses
         raise Exception(f'Нет типа курса с id = {id}')
 
+    def find_course_by_id(self, id):
+        for item in self.courses:
+            if item.id == id:
+                return item
+        raise Exception(f'Нет типа курса с id = {id}')
+
     @staticmethod
-    def create_user(type_):
-        return UserFactory.create(type_)
+    def create_user(type_,dict_data):
+        return UserFactory.create(type_,dict_data)
+
+    def delete_student(self, id):
+        for item in self.students:
+            if item.id == id:
+                self.students.pop(id)
+                return self.students
+        raise Exception(f'Нет типа курса с id = {id}')
+
 
     @staticmethod
     def create_category(name, category=None):
@@ -193,10 +206,12 @@ class Engine:
 
     @staticmethod
     def decode_value(val):
-        val_b = bytes(val.replace('%', '=').replace("+", " "), 'UTF-8')
-        val_decode_str = quopri.decodestring(val_b)
-        return val_decode_str.decode('UTF-8')
-
+        if type(val) ==str:
+            val_b = bytes(val.replace('%', '=').replace("+", " "), 'UTF-8')
+            val_decode_str = quopri.decodestring(val_b)
+            return val_decode_str.decode('UTF-8')
+        else:
+            return list(map(int, val))
 
 # порождающий паттерн Синглтон
 class SingletonByName(type):
@@ -220,7 +235,7 @@ class SingletonByName(type):
 
 class Logger(metaclass=SingletonByName):
 
-    def __init__(self, name, writer=ConsoleWriter(), writer_file=FileWriter("logs.txt") ):
+    def __init__(self, name, writer=ConsoleWriter(), writer_file=FileWriter("logs.txt")):
         self.name = name
         self.writer = writer
         self.writer_file = writer_file
@@ -229,5 +244,3 @@ class Logger(metaclass=SingletonByName):
         # text = f'log---> {text}'
         self.writer.write(text)
         self.writer_file.write(text)
-
-

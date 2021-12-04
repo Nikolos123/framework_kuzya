@@ -33,3 +33,5 @@ def add_test_data_course(site):
 
 
 
+def add_test_data_student(site):
+    pass

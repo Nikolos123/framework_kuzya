@@ -7,17 +7,21 @@ from django.template.loader import render_to_string
 # from coffin import
 from jinja2 import Template, Environment, FileSystemLoader
 
+from components.cbv import ListView, CreateView
 from components.notification import EmailNotifier, SmsNotifier, BaseSerializer
 from components.test_data import add_test_data_type_course,add_test_data_course,add_test_data_student
+from components.unit_of_work import UnitOfWork
 from framework_kuzya.main import PageNotFound404
 from framework_kuzya.templator import render
-from components.models import Engine,Logger
+from components.models import Engine, Logger, MapperRegistry
 from components.decorators import AppRoute, Debug
 
 logger = Logger('views')
 site = Engine()
 email_notifier = EmailNotifier()
 sms_notifier = SmsNotifier()
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 routes = {}
 
 #Test_data
@@ -78,6 +82,8 @@ class TypeCourses:
 
             new_type = site.type_course(name)
             site.type_courses.append(new_type)
+            new_type.mark_new()
+            UnitOfWork.get_current().commit()
             return '200 OK', render('type_courses.html',
                                     objects_list=site.type_courses)
 
@@ -105,6 +111,7 @@ class TypeCourses:
                                        name=result.name)
         elif method == 'GET':
             logger.log('Список типов обучения')
+            test = MapperRegistry.get_current_mapper('type_course')
             return '200 OK', render('type_courses.html',
                                     objects_list=site.type_courses)
 
@@ -154,7 +161,7 @@ class Courses:
         #     return '200 OK', render('include/update_course_type.html',
         #                             id=result.id,
         #                                name=result.name)
-        elif method == 'GET':
+        else:
             logger.log('Список курсов')
             return '200 OK', render('courses.html',
                                     objects_list=site.courses,objects_list_type_course=site.type_courses)
@@ -267,47 +274,6 @@ class NotFound404:
     @Debug(name='NotFound404')
     def __call__(self, request):
         return '404 WHAT', '404 PAGE Not Found'
-
-
-# # Класс-контроллер - "Создание Курсов"
-# @AppRoute(routes=routes, url='/course-create/')
-# class TypeCoursesCreate:
-#
-#     def __call__(self, request):
-#         logger.log('Создание типов обучения "В РАЗРАБОТКЕ ПЕРЕОРЕСАЦИЯ"')
-#         if request['method'] == 'POST':
-#             data = request['data']
-#             name = site.decode_value(data['name'])
-#             new_type = site.create_type_course(name)
-#             site.type_courses.append(new_type)
-#             return '200 OK', render('type_courses.html',
-#                                     objects_list=site.type_courses)
-#         logger.log('Создание типов обучения "ERROR РАЗОБРАТЬСЯ ПОЧЕМУ ПРИМЕЛ GET"')
-
-# Класс-контроллер - Страница "Создать категорию"
-# @AppRoute(routes=routes, url='/create-category/')
-# class CreateCategory:
-#     logger.log('Для примера создание категри')
-#     def __call__(self, request):
-#
-#         if request['method'] == 'POST':
-#             data = request['data']
-#             name = site.decode_value(data['name'])
-#             category_id = data.get('category_id')
-#             category = None
-#             if category_id:
-#                 category = site.find_category_by_id(int(category_id))
-#                 category['name'] = name
-#                 category['category'] = category
-#             new_category = site.create_category(name, category)
-#             site.categories.append(new_category)
-#
-#         #     return '200 OK', render('category.html',
-#         #                             objects_list=site.categories)
-#         # else:
-#         #     categories = site.categories
-#         return '200 OK', render('category.html',
-#                                     categories=site.categories)
 
 #API(Доделать интерфейс) для разных api
 #http://127.0.0.1:8080/api/course

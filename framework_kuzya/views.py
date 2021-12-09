@@ -9,7 +9,7 @@ from jinja2 import Template, Environment, FileSystemLoader
 
 from components.cbv import ListView, CreateView
 from components.notification import EmailNotifier, SmsNotifier, BaseSerializer
-from components.test_data import add_test_data_type_course,add_test_data_course,add_test_data_student
+from components.test_data import add_test_data_type_course,add_test_data_student
 from components.unit_of_work import UnitOfWork
 from framework_kuzya.main import PageNotFound404
 from framework_kuzya.templator import render
@@ -26,7 +26,7 @@ routes = {}
 
 #Test_data
 add_test_data_type_course(site)
-add_test_data_course(site)
+# add_test_data_course(site)
 add_test_data_student(site)
 
 # Класс-контроллер - Страница "главная страница"
@@ -75,32 +75,36 @@ class TypeCourses:
     @Debug(name="CoursesList-create-update-delete-detail")
     def __call__(self, request):
         method = request['method'].upper()
+        mapper = MapperRegistry.get_current_mapper('type_course')
         if method == 'CREATE':
             logger.log('Создание типов обучения')
             data = request['data']
             name = site.decode_value(data['name'])
 
-            new_type = site.type_course(name)
-            site.type_courses.append(new_type)
-            new_type.mark_new()
+            # new_type = site.type_course(name)
+            # site.type_courses.append(new_type)
+            mapper.insert(name)
             UnitOfWork.get_current().commit()
             return '200 OK', render('type_courses.html',
-                                    objects_list=site.type_courses)
+                                    objects_list=mapper.all())
 
         elif method == 'DELETE':
             logger.log('Удаление типов обучения')
             id = int(request['data']['id'])
-            result = site.type_course_delete(id)
+            obj = mapper.find_by_id(id)
+            mapper.delete(obj)
+            UnitOfWork.get_current().commit()
             return '200 OK', render('type_courses.html',
-                                    objects_list=result)
+                                    objects_list=mapper.all())
 
         elif method == 'UPDATE':
             logger.log('Обновление типов обучения')
             id = int(request['data']['id'])
             name = request['data']['name']
             result = site.type_course_update(id,name)
+
             return '200 OK', render('type_courses.html',
-                                    objects_list=result)
+                                    objects_list=mapper.all())
 
         elif method == 'DETAIL':
             logger.log('Детализация типов обучения')
@@ -111,9 +115,9 @@ class TypeCourses:
                                        name=result.name)
         elif method == 'GET':
             logger.log('Список типов обучения')
-            test = MapperRegistry.get_current_mapper('type_course')
+            # mapper = MapperRegistry.get_current_mapper('type_course')
             return '200 OK', render('type_courses.html',
-                                    objects_list=site.type_courses)
+                                    objects_list=mapper.all())
 
 
 @AppRoute(routes=routes, url='/course-list/')

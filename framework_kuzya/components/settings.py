@@ -6,7 +6,7 @@ STATIC_FILES_DIR = path.join(ROOT_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 
-PORT = 8000
+PORT = 8005
 URL_ADDRESS = 'http://127.0.0.1'
 
 

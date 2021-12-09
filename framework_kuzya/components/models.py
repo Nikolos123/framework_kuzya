@@ -64,12 +64,14 @@ class Course(DomainObject):
 
 # Класс-Тип курсов курсов
 class CourseType(DomainObject):
-    auto_id = 0
+    # auto_id = 0
 
-    def __init__(self, param):
-        self.name = param
-        self.id = CourseType.auto_id
-        CourseType.auto_id += 1
+    def __init__(self,id,name):
+        self.id = id
+        self.name = name
+
+        # self.id = CourseType.auto_id
+        # CourseType.auto_id += 1
 
 
 # Класс-Интерактивный курс
@@ -123,9 +125,9 @@ class Engine:
         self.type_courses = []
 
     # Type course
-    @staticmethod
-    def type_course(param):
-        return CourseType(param)
+    # @staticmethod
+    # def type_course(param):
+    #     return CourseType(param)
 
     def type_course_delete(self, id):
         for item in self.type_courses:
@@ -147,11 +149,11 @@ class Engine:
                 return self.type_courses
         raise Exception(f'Нет типа курса с id = {id}')
 
-    def find_type_course_by_id(self, id):
-        for item in self.type_courses:
-            if item.id == id:
-                return item
-        raise Exception(f'Нет типа курса с id = {id}')
+    # def find_type_course_by_id(self, id):
+    #     for item in self.type_courses:
+    #         if item.id == id:
+    #             return item
+    #     raise Exception(f'Нет типа курса с id = {id}')
 
     # Course
     def create_course(self, name, type_):
@@ -301,6 +303,59 @@ class StudentMapper:
         except Exception as e:
             raise DbDeleteException(e.args)
 
+class TypeCoutseMapper:
+
+    def __init__(self, connection):
+        self.connection = connection
+        self.cursor = connection.cursor()
+        self.tablename = 'type_course'
+
+    def all(self):
+        statement = f'SELECT * from {self.tablename}'
+        self.cursor.execute(statement)
+        result = []
+        for item in self.cursor.fetchall():
+            id, name = item
+            type_course = CourseType(id,name)
+            #
+            # type_course.id = id
+            result.append(type_course)
+        return result
+
+    def find_by_id(self, id):
+        statement = f"SELECT id, name FROM {self.tablename} WHERE id=?"
+        self.cursor.execute(statement, (id,))
+        result = self.cursor.fetchone()
+        if result:
+            return CourseType(*result)
+        else:
+            raise RecordNotFoundException(f'record with id={id} not found')
+
+    def insert(self, obj_name):
+        statement = f"INSERT INTO {self.tablename} (name) VALUES (?)"
+        self.cursor.execute(statement, (obj_name,))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbCommitException(e.args)
+
+    def update(self, obj):
+        statement = f"UPDATE {self.tablename} SET name=? WHERE id=?"
+        # Где взять obj.id? Добавить в DomainModel? Или добавить когда берем объект из базы
+        self.cursor.execute(statement, (obj.name, obj.id))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbUpdateException(e.args)
+
+    def delete(self, obj):
+        statement = f"DELETE FROM {self.tablename} WHERE id=?"
+        self.cursor.execute(statement, (obj.id,))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbDeleteException(e.args)
+
 
 connection = sqlite3.connect('patterns.sqlite')
 
@@ -309,7 +364,7 @@ connection = sqlite3.connect('patterns.sqlite')
 class MapperRegistry:
     mappers = {
         'student': StudentMapper,
-        #'category': CategoryMapper
+        'type_course': TypeCoutseMapper,
     }
 
     @staticmethod
@@ -318,8 +373,9 @@ class MapperRegistry:
         if isinstance(obj, Student):
 
             return StudentMapper(connection)
-        #if isinstance(obj, Category):
-            #return CategoryMapper(connection)
+
+        if isinstance(obj, CourseType):
+            return TypeCoutseMapper(connection)
 
     @staticmethod
     def get_current_mapper(name):

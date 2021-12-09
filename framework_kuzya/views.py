@@ -66,9 +66,6 @@ class CategoryList:
                                 objects_list=site.categories)
 
 
-
-
-
 # Класс-контроллер - "Создание типов обучения"
 @AppRoute(routes=routes, url='/type-course-list/')
 class TypeCourses:
@@ -80,9 +77,6 @@ class TypeCourses:
             logger.log('Создание типов обучения')
             data = request['data']
             name = site.decode_value(data['name'])
-
-            # new_type = site.type_course(name)
-            # site.type_courses.append(new_type)
             mapper.insert(name)
             UnitOfWork.get_current().commit()
             return '200 OK', render('type_courses.html',
@@ -114,9 +108,9 @@ class TypeCourses:
             return '200 OK', render('include/update_course_type.html',
                                     id=result.id,
                                        name=result.name)
+
         elif method == 'GET':
             logger.log('Список типов обучения')
-            # mapper = MapperRegistry.get_current_mapper('type_course')
             return '200 OK', render('type_courses.html',
                                     objects_list=mapper.all())
 

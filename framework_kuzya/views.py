@@ -101,15 +101,16 @@ class TypeCourses:
             logger.log('Обновление типов обучения')
             id = int(request['data']['id'])
             name = request['data']['name']
-            result = site.type_course_update(id,name)
-
+            obj = mapper.find_by_id(id)
+            obj.name = name
+            mapper.update(obj)
             return '200 OK', render('type_courses.html',
                                     objects_list=mapper.all())
 
         elif method == 'DETAIL':
             logger.log('Детализация типов обучения')
             id = int(request['data']['id'])
-            result = site.type_course_detail(id)
+            result = mapper.find_by_id(id)
             return '200 OK', render('include/update_course_type.html',
                                     id=result.id,
                                        name=result.name)
